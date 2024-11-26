@@ -3,6 +3,7 @@ const http = require('http');
 const { Server } = require('socket.io');
 const path = require('path');
 const session = require('express-session');
+const PORT = process.env.PORT || 3000;
 
 const app = express();
 const server = http.createServer(app);
@@ -139,5 +140,5 @@ socket.on('setVideoForAdmin', (data) => {
 
 // Стартиране на сървъра
 server.listen(3000, () => {
-    console.log('Сървърът работи на http://localhost:3000');
+    console.log('Сървърът работи на http://localhost:${PORT}`');
 });
