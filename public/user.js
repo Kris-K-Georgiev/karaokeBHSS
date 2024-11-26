@@ -20,7 +20,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Изпращане на чат съобщение
+    socket.on('chatUpdate', (message) => {
+        const newMessage = document.createElement('div');
+        newMessage.textContent = message;
+        chatMessages.appendChild(newMessage);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    });
+
+    // Handle sending chat messages
     sendMessageButton.addEventListener('click', () => {
         const message = chatInput.value.trim();
         if (message) {
@@ -29,11 +36,28 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Изпращане на емотикон
+    // Handle emoji button clicks
     emojiButtons.forEach(button => {
         button.addEventListener('click', () => {
             const emoji = button.dataset.emoji;
             socket.emit('emojiBubble', emoji);
         });
     });
+
+    // Display emoji bubbles
+    socket.on('emojiBubble', (emoji) => {
+        createEmojiBubble(emoji);
+    });
+
+    function createEmojiBubble(emoji) {
+        const bubble = document.createElement('div');
+        bubble.classList.add('emoji-bubble');
+        bubble.textContent = emoji;
+        document.getElementById('videoContainer').appendChild(bubble);
+        bubble.style.left = `${Math.random() * 80 + 10}%`;
+
+        setTimeout(() => {
+            bubble.remove();
+        }, 3000);
+    }
 });

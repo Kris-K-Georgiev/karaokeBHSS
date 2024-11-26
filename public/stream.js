@@ -17,7 +17,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Handle chat updates
     socket.on('chatUpdate', (message) => {
         const newMessage = document.createElement('div');
         newMessage.textContent = message;
@@ -25,11 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
         chatMessages.scrollTop = chatMessages.scrollHeight;
     });
 
-    // Handle emoji bubbles
-    socket.on('emojiBubble', (emoji) => {
-        createEmojiBubble(emoji);
-    });
-
+    // Handle sending chat messages
     sendMessageButton.addEventListener('click', () => {
         const message = chatInput.value.trim();
         if (message) {
@@ -38,11 +33,17 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // Handle emoji button clicks
     emojiButtons.forEach(button => {
         button.addEventListener('click', () => {
             const emoji = button.dataset.emoji;
             socket.emit('emojiBubble', emoji);
         });
+    });
+
+    // Display emoji bubbles
+    socket.on('emojiBubble', (emoji) => {
+        createEmojiBubble(emoji);
     });
 
     function createEmojiBubble(emoji) {

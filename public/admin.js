@@ -37,6 +37,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    socket.on('chatUpdate', (message) => {
+        const newMessage = document.createElement('div');
+        newMessage.textContent = message;
+        chatMessages.appendChild(newMessage);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    });
+
     // Handle sending chat messages
     sendMessageButton.addEventListener('click', () => {
         const message = chatInput.value.trim();
@@ -62,7 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function createEmojiBubble(emoji) {
         const bubble = document.createElement('div');
         bubble.classList.add('emoji-bubble');
-        bubble.textContent = emoji;
+        bubble.textContent = emoji; 
         document.getElementById('videoContainer').appendChild(bubble);
         bubble.style.left = `${Math.random() * 80 + 10}%`;
 
