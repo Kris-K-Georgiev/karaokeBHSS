@@ -1,0 +1,180 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f8f9fa;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+#videoContainer {
+    position: relative;
+    width: 100%;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+#streamPlayer {
+    width: 100%;
+    height: 400px;
+    border-radius: 10px;
+}
+
+.chat-container {
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+    height: 300px;
+    background-color: white;
+    border-radius: 10px;
+    padding: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+#chatMessages {
+    flex-grow: 1;
+    overflow-y: auto;
+    margin-bottom: 10px;
+    padding: 10px;
+    background-color: #f1f1f1;
+    border-radius: 5px;
+}
+
+#chatMessages div {
+    margin-bottom: 5px;
+}
+
+.chat-input-container {
+    display: flex;
+    gap: 10px;
+}
+
+#chatInput {
+    flex-grow: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.songs-container {
+    margin-top: 20px;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.songs-container h2 {
+    text-align: center;
+}
+
+.song-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+}
+
+.song-box {
+    background-color: #f1f1f1;
+    padding: 10px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 200px;
+    justify-content: space-between;
+}
+
+.add-song {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+    justify-content: center;
+}
+
+.add-song input {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    width: 200px;
+}
+
+.add-song button {
+    background-color: #28a745;
+    padding: 10px 20px;
+}
+
+.emoji-btns {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.emoji-btn {
+    font-size: 20px;
+    cursor: pointer;
+}
+
+@media (max-width: 768px) {
+    .songs-container {
+        margin-top: 20px;
+    }
+
+    .song-list {
+        flex-direction: column;
+    }
+}
+.emoji-btn {
+    font-size: 20px;
+    cursor: pointer;
+    margin-right: 5px;
+    transition: transform 0.2s;
+}
+
+.emoji-btn:hover {
+    transform: scale(1.2);
+}
+
+/* Позициониране на балоните с емотикони върху видеото */
+.emoji-bubble {
+    position: absolute;
+    pointer-events: none;
+    z-index: 999;
+    font-size: 30px;
+    animation: floatUp 3s ease-in-out forwards; /* Анимация на емотиконите */
+}
+
+@keyframes floatUp {
+    0% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-200px); /* Балоните ще се движат нагоре */
+        opacity: 0;
+    }
+}
