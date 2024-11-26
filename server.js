@@ -139,6 +139,8 @@ socket.on('setVideoForAdmin', (data) => {
 });
 
 // Стартиране на сървъра
-server.listen(3000, () => {
-    console.log('Сървърът работи на http://localhost:${PORT}`');
+// Стартиране на сървъра
+server.listen(PORT, () => {
+    console.log(`Сървърът работи на http://localhost:${PORT}`);
 });
+
