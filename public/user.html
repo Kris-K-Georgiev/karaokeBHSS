@@ -8,28 +8,34 @@
 </head>
 <body>
     <div class="container">
-        <header>
-            <h1>Потребителска страница</h1>
-        </header>
-
-        <div id="videoContainer">
-            <!-- Видео ще се зарежда тук от администратор -->
-            <iframe id="videoPlayer" src="" frameborder="0" allowfullscreen></iframe>
-        </div>
-
-        <div class="chat-container">
-            <div id="chatMessages"></div>
-            <div class="chat-input-container">
-                <input type="text" id="chatInput" placeholder="Напишете съобщение..." />
-                <button id="sendMessage">Изпрати</button>
-                <div class="emoji-container">
-                    <span class="emoji-btn" data-emoji="👍">👍</span>
-                    <span class="emoji-btn" data-emoji="❤️">❤️</span>
-                    <span class="emoji-btn" data-emoji="😂">😂</span>
+        <div class="stream-layout">
+            <div class="container">
+                <div class="stream-layout">
+                    <div class="star-rating-container">
+                        <span class="star" data-value="1">☆</span>
+                        <span class="star" data-value="2">☆</span>
+                        <span class="star" data-value="3">☆</span>
+                        <span class="star" data-value="4">☆</span>
+                        <span class="star" data-value="5">☆</span>
+                    </div>
+                    
+            
+            <!-- Чат секция -->
+            <div class="chat-container">
+                <div id="chatMessages"></div>
+                <div class="chat-input-container">
+                    <input type="text" id="chatInput" placeholder="Напишете съобщение..." />
+                    <button id="sendMessage">Изпрати</button>
+                    <div class="emoji-container">
+                        <span class="emoji-btn" data-emoji="👍">👍</span>
+                        <span class="emoji-btn" data-emoji="❤️">❤️</span>
+                        <span class="emoji-btn" data-emoji="😂">😂</span>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+
     <script src="/socket.io/socket.io.js"></script>
     <script src="user.js"></script>
 </body>
