@@ -7,18 +7,190 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
     <link href="/styles.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 </head>
+<style>
+    /* Центриране на всички елементи вертикално и хоризонтално */
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f8f9fa;
+    margin: 0;
+}
+
+/* Loading екрана */
+#loadingScreen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10; /* Поставяме го на най-горния слой */
+    opacity: 1;
+    transition: opacity 1s ease-out;
+}
+
+.loader {
+    --icon-count: 3;
+    --inner-height: 4em;
+    --ratio: 2/3;
+    --period: 1s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: var(--inner-height);
+    width: calc(var(--inner-height) * var(--ratio) * var(--icon-count));
+}
+
+.loader .icon {
+    width: calc(100% / var(--icon-count));
+    height: calc(100% * var(--ratio));
+    animation: loader-bounce02 var(--period) infinite linear;
+}
+
+.loader .icon:nth-of-type(2) {
+    animation-delay: calc(1 / 5 * var(--period));
+}
+
+.loader .icon:nth-of-type(3) {
+    animation-delay: calc(2 / 5 * var(--period));
+}
+
+@keyframes loader-bounce02 {
+    20% {
+        transform: translateY(calc(-50% * (1 - var(--ratio))));
+    }
+
+    40% {
+        transform: translateY(calc(50% * (1 - var(--ratio))));
+    }
+
+    60% {
+        transform: translateY(0);
+    }
+
+    80% {
+        transform: translateY(0);
+    }
+}
+
+.container {
+    max-width: 80%;
+    padding: 20px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: none; /* Скриваме формата първоначално */
+    opacity: 0; /* Задаваме начално ниво на прозрачност */
+    transition: opacity 1s ease-in; /* Добавяме плавен преход за прозрачността */
+}
+
+.input-group {
+    display: flex;
+    justify-content: center;
+}
+
+.input-group input {
+    height: 50px;
+    font-size: 18px;
+    padding: 10px;
+}
+
+.input-group button {
+    height: 50px;
+    font-size: 1.5rem; /* По-малък размер на текста */
+    display: flex; /* Използваме flex за центриране */
+    justify-content: center; /* Центрираме хоризонтално */
+    align-items: center; /* Центрираме вертикално */
+    padding: 10px 20px;
+    background-color: #28a745; /* Зелен цвят за фона на бутона */
+    border: none; /* Премахваме ръба */
+    color: white; /* Бял цвят на текста */
+    transition: background-color 0.3s; /* Плавен преход за промяна на цвета при задържане */
+}
+
+/* Стил за при задържане на мишката върху бутона */
+.input-group button:hover {
+    background-color: #218838; /* Тъмнозелен при задържане */
+}
+
+/* Стилове за съобщения за грешка */
+#error {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+/* Премахване на фокусния ръб за бутона */
+input:focus, button:focus {
+    box-shadow: none;
+}
+
+input::placeholder {
+    color: #6c757d;
+}
+</style>
 <body>
+    <!-- Loading Screen -->
+    <div id="loadingScreen">
+        <div class="loader">
+            <span class="icon">
+                <svg xmlns="http://www.w3.org/2000/svg" version="1.1" x="0" y="0" viewBox="0 0 100 100">
+                    <ellipse transform="rotate(-21.283 49.994 75.642)" cx="50" cy="75.651" rx="19.347" ry="16.432" fill="currentColor"></ellipse>
+                    <path fill="currentColor" d="M58.474 7.5h10.258v63.568H58.474z"></path>
+                </svg>
+            </span>
+            <span class="icon">
+                <svg xmlns="http://www.w3.org/2000/svg" version="1.1" x="0" y="0" viewBox="0 0 100 100">
+                    <ellipse transform="rotate(-21.283 49.994 75.642)" cx="50" cy="75.651" rx="19.347" ry="16.432" fill="currentColor"></ellipse>
+                    <path fill="currentColor" d="M58.474 7.5h10.258v63.568H58.474z"></path>
+                </svg>
+            </span>
+            <span class="icon">
+                <svg xmlns="http://www.w3.org/2000/svg" version="1.1" x="0" y="0" viewBox="0 0 100 100">
+                    <ellipse transform="rotate(-21.283 49.994 75.642)" cx="50" cy="75.651" rx="19.347" ry="16.432" fill="currentColor"></ellipse>
+                    <path fill="currentColor" d="M58.474 7.5h10.258v63.568H58.474z"></path>
+                </svg>
+            </span>
+        </div>
+    </div>
+
+    <!-- Контейнер за логин формата -->
     <div class="container">
         <h2 class="text-center">Влезте с вашето име</h2>
         <div id="error" class="text-danger"></div>
         <div class="input-group">
             <input type="text" id="username" class="form-control" placeholder="Въведете име">
-            <button id="loginBtn" class="btn btn-primary">Влез</button>
+            <button class="btn btn-success" id="loginBtn">
+                <i class="fa-solid fa-right-long"></i>
+            </button>
         </div>
     </div>
+
     <script src="/socket.io/socket.io.js"></script>
     <script src="/login.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Изчакваме 2 секунди, за да симулираме зареждането
+        setTimeout(function() {
+            // Плавно изчезване на loading екрана
+            document.getElementById('loadingScreen').style.opacity = '0';
+            
+            // Показваме логин формата с плавно появяване
+            document.querySelector('.container').style.display = 'block';
+            document.querySelector('.container').style.opacity = '1';
+            
+            // След като екрана е напълно изчезнал, го скриваме
+            setTimeout(function() {
+                document.getElementById('loadingScreen').style.display = 'none';
+            }, 1000); // Това е времето на прехода
+        }, 2000); // 2000 милисекунди = 2 секунди
+    </script>
 </body>
 </html>
