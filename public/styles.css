@@ -13,7 +13,6 @@ body, html {
     display: flex;
     flex-direction: column;
     height: 100%;
-    width: 100%;
 }
 
 header {
@@ -29,22 +28,26 @@ header {
     gap: 10px;
     box-sizing: border-box;
     height: 100%;
+    position: relative; /* Ensure relative positioning for emoji bubbles */
 }
 
+
 #videoContainer {
-    flex: 2; /* Видеото заема повече пространство */
+    position: relative; /* To position the emoji container over the video */
+    flex: 2;
     display: flex;
     flex-direction: column;
     background-color: #000;
-    border-radius: 0; /* Премахване на закръгления */
+    border-radius: 0;
     overflow: hidden;
     height: 100%;
 }
 
 #videoPlayerWrapper {
-    flex-grow: 1; /* Видеото запълва цялата височина */
+    flex-grow: 1;
     height: 100%;
 }
+
 
 iframe {
     width: 100%;
@@ -63,10 +66,15 @@ iframe {
 }
 
 #chatMessages {
-    flex-grow: 1;
-    padding: 10px;
+    border-radius: 8px;
+    background-color: #ffffff;
+    padding: 15px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    font-size: 1.5rem;
+    max-height: calc(100vh - 160px); /* Оставя място за бутоните и входното поле */
     overflow-y: auto;
-    background-color: #f9f9f9;
+    margin-bottom: 20px;
+    flex-grow: 1;
 }
 
 .chat-input-container {
@@ -77,34 +85,61 @@ iframe {
     align-items: center;
 }
 
+#sendMessage {
+    font-size: 1.5rem;
+    padding: 12px 20px;
+    background-color: #28a745;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#sendMessage:hover {
+    background-color: #218838;
+}
+
 #chatInput {
-    flex-grow: 1;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
+    border-radius: 8px;
+    font-size: 1.5rem;
+    padding: 12px;
+    width: 100%;
+    margin-right: 10px;
+    border: 1px solid #ced4da;
 }
 
 button {
-    background-color: #007bff;
-    color: white;
+    font-size: 1.5rem;
+    padding: 12px 20px;
+    background-color: #28a745;
+    color: #ffffff;
     border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
+    border-radius: 8px;
     cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
 button:hover {
     background-color: #0056b3;
 }
 
-/* Емотикони */
-.emoji-container {
+#emojiContainer {
+    position: absolute; /* Position over the video */
+    bottom: 0; /* Start at the bottom of the video */
+    left: 0;
+    right: 0;
+    z-index: 9999; /* Make sure emojis stay on top */
+    pointer-events: none; /* Emojis should not block video interactions */
     display: flex;
-    gap: 5px;
+    flex-wrap: wrap;
     justify-content: center;
-    margin-top: 10px;
+    align-items: flex-end; /* Align emojis at the bottom */
+    gap: 15px;
+    padding: 20px;
+    overflow-y: visible; /* Allow overflow of emojis above the video */
+    height: 100%; /* Make the container the same height as the video */
 }
-
 .emoji-btn {
     font-size: 20px;
     cursor: pointer;
@@ -127,6 +162,7 @@ button:hover {
         height: 50%; /* Видеото и чатът заемат по половината екран */
     }
 }
+
 button {
     background-color: #007bff;
     color: white;
@@ -135,54 +171,42 @@ button {
     border-radius: 5px;
     cursor: pointer;
 }
-.emoji-btns {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin-top: 10px;
-}
 
-.emoji-btn {
-    font-size: 20px;
-    cursor: pointer;
-}
-
-@media (max-width: 768px) {
-    .songs-container {
-        margin-top: 20px;
-    }
-
-    .song-list {
-        flex-direction: column;
-    }
-}
-.emoji-btn {
-    font-size: 20px;
-    cursor: pointer;
-    margin-right: 5px;
-    transition: transform 0.2s;
-}
-
-.emoji-btn:hover {
-    transform: scale(1.2);
-}
-
-/* Позициониране на балоните с емотикони върху видеото */
 .emoji-bubble {
     position: absolute;
-    pointer-events: none;
+    font-size: 2.5rem;
+    animation: floatUp 8s ease-in-out forwards, fadeOut 2.5s ease-out forwards;
     z-index: 999;
-    font-size: 30px;
-    animation: floatUp 3s ease-in-out forwards; /* Анимация на емотиконите */
+    opacity: 0;
+    pointer-events: none;
 }
 
 @keyframes floatUp {
     0% {
-        transform: translateY(0);
+        bottom: 0; /* Start from the bottom of the video */
+        transform: translateX(0) scale(1);
+        opacity: 1;
+    }
+    50% {
+        bottom: 60%; /* Move towards the middle of the video */
+        transform: translateX(-50%) scale(1.5);
         opacity: 1;
     }
     100% {
-        transform: translateY(-200px); /* Балоните ще се движат нагоре */
+        bottom: 100%; /* Go beyond the video, to the top of the container */
+        transform: translateX(-50%) scale(1.5);
+        opacity: 0; /* Fade out */
+    }
+}
+
+@keyframes fadeOut {
+    0% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
         opacity: 0;
     }
 }
@@ -195,16 +219,21 @@ button {
 }
 
 .add-song input {
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    width: 200px;
+    border-radius: 8px;
+    font-size: 1.5rem;
+    padding: 12px;
+    width: 30%;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ced4da;
 }
 
 .add-song button {
     background-color: #28a745;
     padding: 10px 20px;
+    margin-bottom: 10px;
 }
+
 #adminFace {
     display: flex;
     justify-content: center;
@@ -212,6 +241,7 @@ button {
     font-size: 40px;
     margin-bottom: 10px;
 }
+
 .star-rating-container {
     display: flex;
     justify-content: center;
