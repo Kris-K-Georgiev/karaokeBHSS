@@ -9,11 +9,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const videoUrlInput = document.getElementById('videoUrl');
     const playPauseButton = document.getElementById('playPauseButton');
     const starRatingContainer = document.querySelectorAll('.star-rating-container');
-     let isVideoPlaying = false; // Да съхраняваме текущото състояние на видеото
+    let isVideoPlaying = false; // Да съхраняваме текущото състояние на видеото
     let starRating = 0;  // Да съхраняваме текущото състояние на видеото
 
     const adminFaceIcon = document.getElementById('adminFaceIcon'); // Лицето за администраторската страница
-    
+
+    // Обработваме обновлението на видеото
     socket.on('videoUpdateForUsers', (data) => {
         if (data.videoUrl) {
             videoPlayer.src = data.videoUrl;
@@ -27,13 +28,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
         resetStars();  // Reset на звездите, когато се пусне ново видео
     });
+
+    // Обработваме натискането на звездите
     starRatingContainer.forEach(container => {
         container.addEventListener('click', (event) => {
             if (event.target.classList.contains('star')) {
                 const rating = parseInt(event.target.dataset.value);
-                currentRating = rating;
-                updateStars(rating);
-                socket.emit('videoRating', rating);  // Изпращане на новата оценка на сървъра
+                starRating = rating;  // Записваме новото ниво на оценката
+                updateStars(rating);  // Обновяваме звездите
+                socket.emit('videoRating', rating);  // Изпращаме новата оценка на сървъра
             }
         });
     });
@@ -50,10 +53,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function resetStars() {
-        currentRating = 0;
-        updateStars(currentRating);  // Reset на звездите
+        starRating = 0;  // Зануляваме рейтинга
+        updateStars(starRating);  // Reset на звездите
     }
-    // Изпращане на съобщение
+
+    // Изпращане на съобщение в чата
     sendMessageButton.addEventListener('click', () => {
         const message = chatInput.value.trim();
         if (message) {
@@ -61,30 +65,6 @@ document.addEventListener('DOMContentLoaded', () => {
             chatInput.value = '';
         }
     });
-    
-
-    playPauseButton.addEventListener('click', () => {
-        const videoUrl = videoUrlInput.value.trim();
-        if (videoUrl) {
-            const videoId = getYouTubeVideoId(videoUrl);
-            if (videoId) {
-                const isPlaying = videoPlayer.paused ? true : false;
-                socket.emit('videoUpdateForUsers', { 
-                    videoUrl: `https://www.youtube.com/embed/${videoId}`, 
-                    isPlaying: isPlaying 
-                });
-
-                if (isPlaying) {
-                    videoPlayer.play();
-                } else {
-                    videoPlayer.pause();
-                }
-
-                videoUrlInput.value = '';
-            }
-        }
-    });
-    
 
     // Обработка на съобщения в чата
     socket.on('chatUpdate', (data) => {
@@ -120,19 +100,17 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Обработваме натискането на бутона за пускане/спиране на видео
-    playButton.addEventListener('click', () => {
+    playPauseButton.addEventListener('click', () => {
         const videoUrl = videoUrlInput.value.trim();
         if (videoUrl) {
             const videoId = getYouTubeVideoId(videoUrl);
             if (videoId) {
-                // Изпращаме състоянието на видеото заедно с новото URL
+                isVideoPlaying = !isVideoPlaying;  // Променяме състоянието на видеото
+
                 socket.emit('videoUpdateForUsers', { 
                     videoUrl: `https://www.youtube.com/embed/${videoId}`, 
-                    isPlaying: !isVideoPlaying 
+                    isPlaying: isVideoPlaying 
                 });
-
-                // Променяме състоянието на видеото (пуснато/спряно)
-                isVideoPlaying = !isVideoPlaying;
 
                 if (isVideoPlaying) {
                     videoPlayer.play();
@@ -140,7 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     videoPlayer.pause();
                 }
 
-                videoUrlInput.value = ''; // Изчистваме полето
+                videoUrlInput.value = '';  // Изчистваме полето за видео URL
             }
         }
     });
@@ -151,5 +129,4 @@ document.addEventListener('DOMContentLoaded', () => {
         const match = url.match(regex);
         return match ? (match[1] || match[2]) : null;
     }
-    
 });

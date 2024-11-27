@@ -9,32 +9,33 @@ document.addEventListener('DOMContentLoaded', () => {
     const videoUrlInput = document.getElementById('videoUrl');
     const playPauseButton = document.getElementById('playPauseButton');
     const starRatingContainer = document.querySelectorAll('.star-rating-container');
-     let isVideoPlaying = false; // Да съхраняваме текущото състояние на видеото
-    let starRating = 0;  // Да съхраняваме текущото състояние на видеото
-
-    const adminFaceIcon = document.getElementById('adminFaceIcon'); // Лицето за администраторската страница
     
+    let currentRating = 0;  // Променлива за съхранение на текущата оценка
+
+    // Получаваме информация за видеото и го показваме
     socket.on('videoUpdateForUsers', (data) => {
         if (data.videoUrl) {
-            videoPlayer.src = data.videoUrl;
+            videoPlayer.src = data.videoUrl;  // Задаваме новото видео URL
         }
 
         if (data.isPlaying) {
-            videoPlayer.play();
+            videoPlayer.play();  // Стартираме видеото
         } else {
-            videoPlayer.pause();
+            videoPlayer.pause();  // Пауза, ако не трябва да се пуска
         }
 
-        resetStars();  // Reset на звездите, когато се пусне ново видео
+        resetStars();  // Зануляваме оценката и звездите при пускане на ново видео
     });
-    
-  
 
-    function resetStars() {
-        currentRating = 0;
-        updateStars(currentRating);  // Reset на звездите
-    }
-    // Изпращане на съобщение
+    // Обновяване на съобщенията в чата
+    socket.on('chatUpdate', (message) => {
+        const newMessage = document.createElement('div');
+        newMessage.textContent = message;
+        chatMessages.appendChild(newMessage);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    });
+
+    // Изпращане на съобщение в чата
     sendMessageButton.addEventListener('click', () => {
         const message = chatInput.value.trim();
         if (message) {
@@ -42,40 +43,8 @@ document.addEventListener('DOMContentLoaded', () => {
             chatInput.value = '';
         }
     });
-    
 
-    playPauseButton.addEventListener('click', () => {
-        const videoUrl = videoUrlInput.value.trim();
-        if (videoUrl) {
-            const videoId = getYouTubeVideoId(videoUrl);
-            if (videoId) {
-                const isPlaying = videoPlayer.paused ? true : false;
-                socket.emit('videoUpdateForUsers', { 
-                    videoUrl: `https://www.youtube.com/embed/${videoId}`, 
-                    isPlaying: isPlaying 
-                });
-
-                if (isPlaying) {
-                    videoPlayer.play();
-                } else {
-                    videoPlayer.pause();
-                }
-
-                videoUrlInput.value = '';
-            }
-        }
-    });
-    
-
-    // Обработка на съобщения в чата
-    socket.on('chatUpdate', (data) => {
-        const { username, message } = data;
-        const newMessage = document.createElement('div');
-        newMessage.innerHTML = `<strong>${username}:</strong> ${message}`;
-        chatMessages.appendChild(newMessage);
-    });
-
-    // Изпращане на емоции
+    // Обработваме натискането на бутони за емоции
     emojiButtons.forEach(button => {
         button.addEventListener('click', () => {
             const emoji = button.dataset.emoji;
@@ -83,7 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Показване на емоции
+    // Показване на емоции в балони
     socket.on('emojiBubble', (emoji) => {
         createEmojiBubble(emoji);
     });
@@ -101,24 +70,22 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Обработваме натискането на бутона за пускане/спиране на видео
-    playButton.addEventListener('click', () => {
+    playPauseButton.addEventListener('click', () => {
         const videoUrl = videoUrlInput.value.trim();
         if (videoUrl) {
             const videoId = getYouTubeVideoId(videoUrl);
             if (videoId) {
-                // Изпращаме състоянието на видеото заедно с новото URL
+                const isPlaying = videoPlayer.paused ? true : false;  // Проверяваме дали видеото е на пауза
+
                 socket.emit('videoUpdateForUsers', { 
                     videoUrl: `https://www.youtube.com/embed/${videoId}`, 
-                    isPlaying: !isVideoPlaying 
+                    isPlaying: isPlaying 
                 });
 
-                // Променяме състоянието на видеото (пуснато/спряно)
-                isVideoPlaying = !isVideoPlaying;
-
-                if (isVideoPlaying) {
-                    videoPlayer.play();
+                if (isPlaying) {
+                    videoPlayer.play();  // Ако видеото е на пауза, го пускаме
                 } else {
-                    videoPlayer.pause();
+                    videoPlayer.pause();  // Ако видеото е пуснато, го спираме
                 }
 
                 videoUrlInput.value = ''; // Изчистваме полето
@@ -130,11 +97,20 @@ document.addEventListener('DOMContentLoaded', () => {
     function getYouTubeVideoId(url) {
         const regex = /(?:https?:\/\/(?:www\.)?youtube\.com\/(?:[^\/\n\s]+\/\S+|(?:v|e(?:mbed)?)\/([^\/\n\s&?]+))|youtu\.be\/([^\/\n\s&?]+))/;
         const match = url.match(regex);
-        return match ? (match[1] || match[2]) : null;
+        return match ? match[1] || match[2] : null;
     }
-    
-});
 
+    // Оценяване със звезди
+    starRatingContainer.forEach(container => {
+        container.addEventListener('click', (event) => {
+            if (event.target.classList.contains('star')) {
+                const rating = parseInt(event.target.dataset.value);
+                currentRating = rating;
+                updateStars(rating);
+                socket.emit('videoRating', rating);  // Изпращаме новата оценка на сървъра
+            }
+        });
+    });
 
     function updateStars(rating) {
         const stars = document.querySelectorAll('.star');
@@ -152,3 +128,4 @@ document.addEventListener('DOMContentLoaded', () => {
         updateStars(currentRating);  // Reset на звездите при ново видео
     }
 });
+
