@@ -124,6 +124,7 @@ button:hover {
     background-color: #0056b3;
 }
 
+
 #emojiContainer {
     position: absolute; /* Position over the video */
     bottom: 0; /* Start at the bottom of the video */

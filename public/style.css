@@ -214,3 +214,41 @@ button:hover {
         flex-grow: 1;
     }
 }
+.emoji-bubble {
+    position: absolute;
+    font-size: 2.5rem;
+    animation: floatUp 8s ease-in-out forwards, fadeOut 2.5s ease-out forwards;
+    z-index: 999;
+    opacity: 0;
+    pointer-events: none;
+}
+
+@keyframes floatUp {
+    0% {
+        bottom: 0; /* Start from the bottom of the video */
+        transform: translateX(0) scale(1);
+        opacity: 1;
+    }
+    50% {
+        bottom: 60%; /* Move towards the middle of the video */
+        transform: translateX(-50%) scale(1.5);
+        opacity: 1;
+    }
+    100% {
+        bottom: 100%; /* Go beyond the video, to the top of the container */
+        transform: translateX(-50%) scale(1.5);
+        opacity: 0; /* Fade out */
+    }
+}
+
+@keyframes fadeOut {
+    0% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
