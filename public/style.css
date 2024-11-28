@@ -6,7 +6,7 @@ body, html {
     background-color: #f8f9fa;
     display: flex;
     flex-direction: column;
-    overflow: hidden; /* Предотвратява скрол на основната страница */
+    overflow: hidden;
 }
 
 .container {
@@ -55,6 +55,7 @@ iframe {
     height: 100%;
     border: none;
 }
+
 
 .chat-container {
     flex: 1;

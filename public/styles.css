@@ -18,7 +18,7 @@ body, html {
 header {
     text-align: center;
     padding: 10px;
-    background-color: #28a745;
+    background-color: #007bff;
     color: white;
 }
 
@@ -121,54 +121,51 @@ button {
 }
 
 button:hover {
-    background-color: #28a745;
+    background-color: #0056b3;
 }
 
 
 #emojiContainer {
+    position: absolute; /* Position over the video */
+    bottom: 0; /* Start at the bottom of the video */
+    left: 0;
+    right: 0;
+    z-index: 9999; /* Make sure emojis stay on top */
+    pointer-events: none; /* Emojis should not block video interactions */
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 5px; /* По-малко разстояние между бутоните */
-    padding: 10px;
-    overflow: hidden; /* Скрива скрола, ако има излишни елементи */
+    align-items: flex-end; /* Align emojis at the bottom */
+    gap: 15px;
+    padding: 20px;
+    overflow-y: visible; /* Allow overflow of emojis above the video */
+    height: 100%; /* Make the container the same height as the video */
 }
-
 .emoji-btn {
-    font-size: 3vw; /* Размерът на текста (емоджи) се адаптира според ширината на екрана */
-    width: 10%; /* Ширината на бутоните е пропорционална на контейнера */
-    aspect-ratio: 1; /* Запазва бутоните като квадрат */
-    padding: 0;
-    border: none;
-    background: transparent;
+    font-size: 20px;
     cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: transform 0.2s, font-size 0.2s;
+    transition: transform 0.2s;
 }
 
 .emoji-btn:hover {
-    transform: scale(1.1); /* Леко увеличение при задържане */
+    transform: scale(1.2);
 }
 
+/* Адаптивен дизайн */
 @media (max-width: 768px) {
-    .emoji-btn {
-        font-size: 4vw; /* Увеличава размера за таблети */
-        width: 12%; /* Адаптира ширината */
+    .stream-layout {
+        flex-direction: column; /* При мобилни устройства - вертикално подреждане */
+    }
+
+    #videoContainer, .chat-container {
+        flex: none;
+        width: 100%;
+        height: 50%; /* Видеото и чатът заемат по половината екран */
     }
 }
-
-@media (max-width: 480px) {
-    .emoji-btn {
-        font-size: 5vw; /* Още по-големи за телефони */
-        width: 14%; /* Увеличена ширина за малки екрани */
-    }
-}
-
 
 button {
-    background-color: #28a745;
+    background-color: #007bff;
     color: white;
     border: none;
     padding: 10px 20px;
