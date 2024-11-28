@@ -6,6 +6,7 @@ body, html {
     background-color: #f8f9fa;
     display: flex;
     flex-direction: column;
+    overflow: hidden; /* Предотвратява скрол на основната страница */
 }
 
 .container {
@@ -15,6 +16,10 @@ body, html {
     width: 100%;
 }
 
+.container-fluid {
+    height: 100%; /* Запълва целия екран */
+}
+
 header {
     text-align: center;
     padding: 10px;
@@ -22,6 +27,7 @@ header {
     color: white;
 }
 
+/* Основна структура */
 .stream-layout {
     flex: 1;
     display: flex;
@@ -57,6 +63,7 @@ iframe {
     background-color: white;
     overflow: hidden;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
 }
 
 #chatMessages {
@@ -65,18 +72,20 @@ iframe {
     padding: 15px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     font-size: 1.5rem;
-    max-height: calc(100vh - 160px);
+    max-height: calc(100vh - 200px); /* Регулира височината спрямо заглавията и формите */
     overflow-y: auto;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     flex-grow: 1;
 }
 
+/* Контрол на чата */
 .chat-input-container {
     display: flex;
     gap: 10px;
     padding: 10px;
     background-color: #f1f1f1;
     align-items: center;
+    border-top: 1px solid #ddd;
 }
 
 #sendMessage {
@@ -122,29 +131,48 @@ button:hover {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    align-items: center;
-    gap: 15px;
-    padding: 20px;
-    flex-grow: 1;
-    overflow-y: auto;
+    gap: 5px;
+    padding: 10px;
+    overflow-y: auto; /* Разрешава скрол за емоджитата */
+    max-height: 100%;
+    background-color: #fff;
+    border-top: 1px solid #ddd;
 }
 
 .emoji-btn {
-    font-size: 3rem;
-    margin: 10px;
+    font-size: 3vw; /* Адаптивен размер */
+    width: 10%;
+    aspect-ratio: 1;
+    padding: 0;
+    border: none;
+    background: transparent;
     cursor: pointer;
-    transition: transform 0.3s, background-color 0.3s ease-in-out;
-    padding: 15px;
-    border-radius: 8px;
-    background-color: #e9ecef;
-    color: #495057;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease;
 }
 
 .emoji-btn:hover {
-    transform: scale(1.4);
-    background-color: #d1d8e0;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transform: scale(1.1);
+}
+
+/* Мобилен изглед */
+@media (max-width: 768px) {
+    .emoji-btn {
+        font-size: 9vw;
+        width: 12%;
+    }
+
+    .stream-layout {
+        flex-direction: column;
+    }
+
+    #videoContainer, .chat-container {
+        flex: none;
+        width: 100%;
+        height: 50%;
+    }
 }
 
 .add-song {
