@@ -23,7 +23,7 @@ body, html {
 header {
     text-align: center;
     padding: 10px;
-    background-color: #007bff;
+    background-color: #28a745;
     color: white;
 }
 
@@ -115,7 +115,7 @@ iframe {
 button {
     font-size: 1.5rem;
     padding: 12px 20px;
-    background-color: #007bff;
+    background-color: #28a745;
     color: white;
     border: none;
     border-radius: 8px;
@@ -124,9 +124,11 @@ button {
 }
 
 button:hover {
-    background-color: #0056b3;
+    background-color: #218838;
 }
-
+button.container-fluid {
+    background-color: #28a745;
+}
 #emojiContainer {
     display: flex;
     flex-wrap: wrap;
@@ -279,4 +281,21 @@ button:hover {
     100% {
         opacity: 0;
     }
+}
+#emojiTab, #chatTab {
+    background-color: #28a745; /* Зелен цвят по подразбиране */
+    color: white; /* Бял текст */
+    border: none;
+    border-radius: 8px;
+    transition: background-color 0.3s ease; /* Плавен преход */
+}
+
+#emojiTab:hover, #chatTab:hover {
+    background-color: #28a745; /* Зелен цвят при hover */
+    color: white; /* Бял текст при hover */
+}
+
+#emojiTab:active, #chatTab:active {
+    background-color: #218838; /* Тъмен зелен при натискане */
+    color: white; /* Бял текст при натискане */
 }

@@ -18,7 +18,7 @@ body, html {
 header {
     text-align: center;
     padding: 10px;
-    background-color: #007bff;
+    background-color: #28a745;
     color: white;
 }
 
@@ -121,7 +121,7 @@ button {
 }
 
 button:hover {
-    background-color: #0056b3;
+    background-color: #28a745;
 }
 
 
@@ -168,7 +168,7 @@ button:hover {
 
 
 button {
-    background-color: #007bff;
+    background-color: #28a745;
     color: white;
     border: none;
     padding: 10px 20px;

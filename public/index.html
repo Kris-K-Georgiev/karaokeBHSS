@@ -4,170 +4,200 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Караоке Сайт</title>
+    <!-- Включване на Font Awesome за икони -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
-    <link href="/styles.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 </head>
 <style>
-    /* Центриране на всички елементи вертикално и хоризонтално */
-body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background-color: #f8f9fa;
-    margin: 0;
-}
-
-/* Loading екрана */
-#loadingScreen {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(255, 255, 255, 0.8);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 10; /* Поставяме го на най-горния слой */
-    opacity: 1;
-    transition: opacity 1s ease-out;
-}
-
-.loader {
-    --icon-count: 3;
-    --inner-height: 4em;
-    --ratio: 2/3;
-    --period: 1s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: var(--inner-height);
-    width: calc(var(--inner-height) * var(--ratio) * var(--icon-count));
-}
-
-.loader .icon {
-    width: calc(100% / var(--icon-count));
-    height: calc(100% * var(--ratio));
-    animation: loader-bounce02 var(--period) infinite linear;
-}
-
-.loader .icon:nth-of-type(2) {
-    animation-delay: calc(1 / 5 * var(--period));
-}
-
-.loader .icon:nth-of-type(3) {
-    animation-delay: calc(2 / 5 * var(--period));
-}
-
-@keyframes loader-bounce02 {
-    20% {
-        transform: translateY(calc(-50% * (1 - var(--ratio))));
+    /* Основни стилове */
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        background-color: #f8f9fa;
     }
 
-    40% {
-        transform: translateY(calc(50% * (1 - var(--ratio))));
+    /* Loading екран */
+    #loadingScreen {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(255, 255, 255, 0.8);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 10;
+        opacity: 1;
+        transition: opacity 1s ease-out;
     }
 
-    60% {
-        transform: translateY(0);
+    /* Музикален лоудър */
+    .loader {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 20px;
     }
 
-    80% {
-        transform: translateY(0);
+    .loader .icon {
+        font-size: 50px;
+        animation: bounce 1s infinite ease-in-out;
+        color: #218838; /* Тъмнозелен цвят за нотите */
     }
-}
 
-.container {
-    max-width: 80%;
-    max-height: 17%;
-    padding: 20px;
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    display: none; /* Скриваме формата първоначално */
-    opacity: 0; /* Задаваме начално ниво на прозрачност */
-    transition: opacity 1s ease-in; /* Добавяме плавен преход за прозрачността */
-}
+    .loader .icon:nth-child(2) {
+        animation-delay: 0.2s;
+    }
 
-.input-group {
-    display: flex;
-    justify-content: center;
-}
+    .loader .icon:nth-child(3) {
+        animation-delay: 0.4s;
+    }
 
-.input-group input {
-    height: 50px;
-    font-size: 18px;
-    padding: 10px;
-}
+    @keyframes bounce {
+        0%, 100% {
+            transform: translateY(0);
+        }
+        50% {
+            transform: translateY(-20px);
+        }
+    }
 
-.input-group button {
-    height: 50px;
-    font-size: 1.5rem; /* По-малък размер на текста */
-    display: flex; /* Използваме flex за центриране */
-    justify-content: center; /* Центрираме хоризонтално */
-    align-items: center; /* Центрираме вертикално */
-    padding: 10px 20px;
-    background-color: #28a745; /* Зелен цвят за фона на бутона */
-    border: none; /* Премахваме ръба */
-    color: white; /* Бял цвят на текста */
-    transition: background-color 0.3s; /* Плавен преход за промяна на цвета при задържане */
-}
+    /* Контейнер за логин формата */
+    .container {
+        width: 100%;
+        max-width: 400px;
+        background-color: white;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        opacity: 0;
+        display: none;
+        transition: opacity 1s ease-in-out;
+    }
 
-/* Стил за при задържане на мишката върху бутона */
-.input-group button:hover {
-    background-color: #218838; /* Тъмнозелен при задържане */
-}
+    h2 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
 
-/* Стилове за съобщения за грешка */
-#error {
-    font-size: 14px;
-    font-weight: bold;
-}
+    .input-group {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 20px;
+    }
 
-/* Премахване на фокусния ръб за бутона */
-input:focus, button:focus {
-    box-shadow: none;
-}
+    .input-group input {
+        height: 50px;
+        font-size: 18px;
+        padding: 10px;
+        width: 100%;
+        border: 1px solid #ced4da;
+        border-radius: 5px;
+    }
 
-input::placeholder {
-    color: #6c757d;
-}
+    .input-group button {
+        height: 50px;
+        width: 50px;
+        border: none;
+        background-color: #28a745;
+        color: white;
+        font-size: 1.5rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s, transform 0.2s;
+    }
+
+    .input-group button:hover {
+        background-color: #218838;
+        transform: scale(1.1);
+    }
+
+    #error {
+        font-size: 14px;
+        color: red;
+        text-align: center;
+        margin-bottom: 15px;
+    }
+
+    input:focus, button:focus {
+        box-shadow: none;
+    }
+
+    input::placeholder {
+        color: #6c757d;
+    }
+
+    /* Мобилна адаптивност */
+    @media (max-width: 767px) {
+        .container {
+            padding: 20px;
+            max-width: 90%;
+        }
+
+        .input-group input {
+            font-size: 16px;
+        }
+
+        .input-group button {
+            font-size: 1.25rem;
+        }
+
+        .loader .icon {
+            font-size: 40px;
+        }
+    }
+
+    /* Стилове за по-малки устройства */
+    @media (max-width: 480px) {
+        .container {
+            padding: 15px;
+        }
+
+        .input-group input {
+            font-size: 14px;
+        }
+
+        .input-group button {
+            font-size: 1.2rem;
+        }
+    }
 </style>
 <body>
-    <!-- Loading Screen -->
+
+    <!-- Loading екран -->
     <div id="loadingScreen">
         <div class="loader">
-            <span class="icon">
-                <svg xmlns="http://www.w3.org/2000/svg" version="1.1" x="0" y="0" viewBox="0 0 100 100">
-                    <ellipse transform="rotate(-21.283 49.994 75.642)" cx="50" cy="75.651" rx="19.347" ry="16.432" fill="currentColor"></ellipse>
-                    <path fill="currentColor" d="M58.474 7.5h10.258v63.568H58.474z"></path>
-                </svg>
-            </span>
-            <span class="icon">
-                <svg xmlns="http://www.w3.org/2000/svg" version="1.1" x="0" y="0" viewBox="0 0 100 100">
-                    <ellipse transform="rotate(-21.283 49.994 75.642)" cx="50" cy="75.651" rx="19.347" ry="16.432" fill="currentColor"></ellipse>
-                    <path fill="currentColor" d="M58.474 7.5h10.258v63.568H58.474z"></path>
-                </svg>
-            </span>
-            <span class="icon">
-                <svg xmlns="http://www.w3.org/2000/svg" version="1.1" x="0" y="0" viewBox="0 0 100 100">
-                    <ellipse transform="rotate(-21.283 49.994 75.642)" cx="50" cy="75.651" rx="19.347" ry="16.432" fill="currentColor"></ellipse>
-                    <path fill="currentColor" d="M58.474 7.5h10.258v63.568H58.474z"></path>
-                </svg>
-            </span>
+            <!-- Нота икона -->
+            <div class="icon">
+                <i class="fas fa-music"></i>
+            </div>
+
+            <!-- Микрофон икона -->
+            <div class="icon">
+                <i class="fas fa-microphone"></i>
+            </div>
+
+            <!-- Плей бутон икона -->
+            <div class="icon">
+                <i class="fas fa-music"></i>
+            </div>
         </div>
     </div>
 
-    <!-- Контейнер за логин формата -->
+    <!-- Логин форма -->
     <div class="container">
-        <h2 class="text-center">Влезте с вашето име</h2>
-        <div id="error" class="text-danger"></div>
+        <h2>Влезте с вашето име</h2>
+        <div id="error"></div>
         <div class="input-group">
             <input type="text" id="username" class="form-control" placeholder="Въведете име">
-            <button class="btn btn-success" id="loginBtn">
+            <button class="btn" id="loginBtn">
                 <i class="fa-solid fa-right-long"></i>
             </button>
         </div>
@@ -178,20 +208,20 @@ input::placeholder {
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-        // Изчакваме 2 секунди, за да симулираме зареждането
+        // Изчакваме 2 секунди за да симулираме зареждането
         setTimeout(function() {
-            // Плавно изчезване на loading екрана
             document.getElementById('loadingScreen').style.opacity = '0';
-            
+
             // Показваме логин формата с плавно появяване
-            document.querySelector('.container').style.display = 'block';
-            document.querySelector('.container').style.opacity = '1';
-            
+            const container = document.querySelector('.container');
+            container.style.display = 'block';
+            container.style.opacity = '1';
+
             // След като екрана е напълно изчезнал, го скриваме
             setTimeout(function() {
                 document.getElementById('loadingScreen').style.display = 'none';
-            }, 1000); // Това е времето на прехода
-        }, 2000); // 2000 милисекунди = 2 секунди
+            }, 1000);
+        }, 2000);
     </script>
 </body>
 </html>
